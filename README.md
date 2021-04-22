@@ -1,7 +1,17 @@
 # Scala2021
 
-To run the tests for each implemented Task run the command
+To run the tests for each implemented Tasks run the command
 
 ```scala
 sbt test
+```
+
+Task 01 (Domain Impressions)
+```scala
+sbt "testOnly *DomainSuite -- -oD"
+```
+
+Task 02 (Brackets)
+```scala
+sbt "testOnly *BracketsSuite -- -oD"
 ```

@@ -47,7 +47,6 @@ class DomainsSuite extends AnyFlatSpec with should.Matchers with StrictLogging {
     calculatedResult.toSet.diff(expectedResult.toSet) mustBe Set.empty
     expectedResult.toSet.diff(calculatedResult.toSet) mustBe Set.empty
 
-    logger.debug(Domains.visitedDomainsWithCountPretty(regularInput))
   }
 
   // testing of internal Map-to-Map comparison logic
