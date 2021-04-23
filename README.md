@@ -15,3 +15,8 @@ Task 02 (Brackets)
 ```scala
 sbt "testOnly *BracketsSuite -- -oD"
 ```
+
+Task 03 (Compression)
+```scala
+sbt "testOnly *CompressionSuite -- -oD"
+```
