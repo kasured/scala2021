@@ -20,3 +20,18 @@ Task 03 (Compression)
 ```scala
 sbt "testOnly *CompressionSuite -- -oD"
 ```
+
+Task 04 (Change)
+```scala
+sbt "testOnly *ChangeSuite -- -oD"
+```
+
+Task 05 (Access)
+```scala
+sbt "testOnly *AccessSuite -- -oD"
+```
+
+Task 06 (Validation)
+```scala
+sbt "testOnly *ValidationSuite -- -oD"
+```
