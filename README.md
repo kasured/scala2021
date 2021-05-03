@@ -35,3 +35,8 @@ Task 06 (Validation)
 ```scala
 sbt "testOnly *ValidationSuite -- -oD"
 ```
+
+Task 07 (Control Structure)
+```scala
+sbt "testOnly *ControlStructureSuite -- -oD"
+```
