@@ -8,8 +8,8 @@ class CurrencyZoneSuite extends AnyFlatSpec {
 
   private val TaskId = "Task 09 (Currency DSL)"
 
-  import CurrencyZone.{MoneyWrapper, eurToUsd}
-  import Syntax.CurrencyOps
+  import CurrencyZone.MoneyWrapper
+  import Syntax.CrossCurrencyOps
 
   it should s"$TaskId Perform calculation for USD type currencies" in {
     val usdMoney: Money[USD.type] = 10(USD) + 20(USD)
@@ -23,8 +23,6 @@ class CurrencyZoneSuite extends AnyFlatSpec {
 
   it should s"$TaskId Perform calculation for cross type currencies" in {
 
-    import Syntax.CrossCurrencyOps
-
     val resultInUsd: Money[USD.type] = 10(USD) + 20(EUR)
 
     resultInUsd shouldBe 32(USD)
@@ -37,7 +35,6 @@ class CurrencyZoneSuite extends AnyFlatSpec {
 
     val eurMoney: Money[EUR.type] = 10(EUR) + 20(EUR)
 
-    import Syntax.CrossCurrencyOps
     val usdMoney = eurMoney to USD
     val gbpMoney = eurMoney to GBP
 
