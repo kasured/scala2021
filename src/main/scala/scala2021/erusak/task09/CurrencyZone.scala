@@ -32,6 +32,10 @@ object CurrencyZone {
     override def rate: Double = 1.1
   }
 
+  implicit val eurToGbp: Converter[EUR.type, GBP.type] = new Converter[EUR.type, GBP.type] {
+    override def rate: Double = 0.8
+  }
+
   implicit val usdToGbp: Converter[USD.type, GBP.type] = new Converter[USD.type, GBP.type] {
     override def rate: Double = 0.5
   }

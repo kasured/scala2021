@@ -37,9 +37,23 @@ object BowlingGame {
 
   }
 
-  private def calculateScore(attempts: List[Attempt]): Int = attempts.sliding(3).map(attemptScore).sum
+  private def calculateScore(attempts: List[Attempt]): Int = {
+    println(attempts)
+    val tmp = attempts.sliding(3).flatMap(processExtra)
+    val withExtraRemoved = tmp.toList
+    println(withExtraRemoved)
+    withExtraRemoved.sliding(3).map(evaluate).sum
+  }
 
-  private def attemptScore(frame: List[Attempt]): Int = frame match {
+  private def processExtra(frame: List[Attempt]): List[Attempt] = frame match {
+    case Extra :: Nil => List(Miss, Miss)
+    case Extra :: attempt :: Nil => List(attempt, Miss)
+    case Extra :: attempt1 :: attempt2 :: Nil => List(attempt1, attempt2)
+    case head :: _ => List(head)
+    case _ => Nil
+  }
+
+  private def evaluate(frame: List[Attempt]): Int = frame match {
     case _ => 0
   }
 

@@ -33,4 +33,19 @@ class CurrencyZoneSuite extends AnyFlatSpec {
 
   }
 
+  it should s"$TaskId Perform calculation for cross type currencies (advanced)" in {
+
+    val eurMoney: Money[EUR.type] = 10(EUR) + 20(EUR)
+
+    import Syntax.CrossCurrencyOps
+    val usdMoney = eurMoney to USD
+    val gbpMoney = eurMoney to GBP
+
+    usdMoney shouldBe 33(USD)
+    gbpMoney shouldBe 24(GBP)
+
+  }
+
+
+
 }
