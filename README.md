@@ -40,3 +40,8 @@ Task 07 (Control Structure)
 ```scala
 sbt "testOnly *ControlStructureSuite -- -oD"
 ```
+
+Task 09 (Currency DSL)
+```scala
+sbt "testOnly *CurrencyZoneSuite -- -oD"
+```
