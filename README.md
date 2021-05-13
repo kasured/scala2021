@@ -41,6 +41,11 @@ Task 07 (Control Structure)
 sbt "testOnly *ControlStructureSuite -- -oD"
 ```
 
+Task 08 (Bowling Game Scoring)
+```scala
+sbt "testOnly *BowlingScoreSuite -- -oD"
+```
+
 Task 09 (Currency DSL)
 ```scala
 sbt "testOnly *CurrencyZoneSuite -- -oD"
