@@ -1,60 +1,68 @@
 package scala2021.erusak.task08
 
+import scala.annotation.tailrec
+
 object BowlingGame {
 
   implicit class AttemptsWrapper(input: String) {
     def calculateScore: Int = BowlingGame.calculateScore(input.toAttempts)
 
-    def toAttempts: List[Attempt] = input.split('|').toList.flatMap(decode)
-
-    private def decode(input: String): List[Attempt] = input match {
-      case "" => List(Extra)
-      case other => other.toList.map(Attempt.apply)
+    def toAttempts: List[Attempt] = {
+      val split = input.split("\\|\\|").toList
+      val normalAttempts = split.head.split('|').toList.map(Attempt.apply)
+      val extraAttempts = if (split.size == 2) List(Attempt.extra(split(1))) else List.empty
+      normalAttempts ::: extraAttempts
     }
-
-  }
-
-  sealed trait Attempt
-
-  case object Strike extends Attempt
-
-  case object Spare extends Attempt
-
-  case object Miss extends Attempt
-
-  case object Extra extends Attempt
-
-  case class Hit(pins: Int) extends Attempt
-
-  object Attempt {
-
-    def apply(char: Char): Attempt = char match {
-      case 'X' => Strike
-      case '/' => Spare
-      case '-' => Miss
-      case n => Hit(n.asDigit)
-    }
-
   }
 
   private def calculateScore(attempts: List[Attempt]): Int = {
-    println(attempts)
-    val tmp = attempts.sliding(3).flatMap(processExtra)
-    val withExtraRemoved = tmp.toList
-    println(withExtraRemoved)
-    withExtraRemoved.sliding(3).map(evaluate).sum
+    val reversed = attempts.reverse
+    calculateScore(reversed, 0, 0, 0)
   }
 
-  private def processExtra(frame: List[Attempt]): List[Attempt] = frame match {
-    case Extra :: Nil => List(Miss, Miss)
-    case Extra :: attempt :: Nil => List(attempt, Miss)
-    case Extra :: attempt1 :: attempt2 :: Nil => List(attempt1, attempt2)
-    case head :: _ => List(head)
-    case _ => Nil
+  @tailrec
+  private def calculateScore(attemptsReversed: List[Attempt], beforeBefore: Int, before: Int, acc: Int): Int = attemptsReversed match {
+    case Nil => acc
+    case ExtraFromStrike(first, second) :: tail => calculateScore(tail, second, first, acc)
+    case ExtraFromSpare(first) :: tail => calculateScore(tail, before, first, acc)
+    case Hit(p1, p2) :: tail => calculateScore(tail, p2, p1, acc + p1 + p2)
+    case Strike :: tail => calculateScore(tail, before, 10, acc + 10 + before + beforeBefore)
+    case Spare(first) :: tail => calculateScore(tail, 10 - first, first, acc + 10 + before)
   }
 
-  private def evaluate(frame: List[Attempt]): Int = frame match {
-    case _ => 0
+  sealed trait Attempt
+  final case object Strike extends Attempt
+  final case class Spare(first: Int) extends Attempt
+  final case class Hit(first: Int, second: Int) extends Attempt
+  final case class ExtraFromSpare(first: Int) extends Attempt
+  final case class ExtraFromStrike(first: Int, second: Int) extends Attempt
+
+  object Attempt {
+
+    def apply(attemptRaw: String): Attempt = attemptRaw match {
+      case "X" => Strike
+      case spare if spare.endsWith("/") => Spare(asDigit(spare.charAt(0)))
+      case hit => hit.toList match {
+        case List(d1, d2) => Hit(asDigit(d1), asDigit(d2))
+        case unknown => throw new IllegalArgumentException(s"cannot proceed with $unknown")
+      }
+    }
+
+    def extra(extraRaw: String): Attempt = extraRaw.toList match {
+      case 'X' :: Nil => ExtraFromSpare(10)
+      case d :: Nil => ExtraFromSpare(asDigit(d))
+      case 'X' :: 'X' :: Nil => ExtraFromStrike(10, 10)
+      case 'X' :: d :: Nil => ExtraFromStrike(10, asDigit(d))
+      case d :: '/' :: Nil => ExtraFromStrike(asDigit(d), 10 - asDigit(d))
+      case d1 :: d2 :: Nil => ExtraFromStrike(asDigit(d1), asDigit(d2))
+      case unknown => throw new IllegalArgumentException(s"cannot proceed with $unknown")
+    }
+
+    def asDigit(char: Char): Int = char match {
+      case '-' => 0
+      case d => d.asDigit
+    }
+
   }
 
 }
